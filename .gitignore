@@ -1,0 +1,9 @@
+.eslintrc.js
+.eslintignore
+.vscode
+*.txt
+new_day.sh
+node_modules
+package.json
+yarn.lock
+tsconfig.json
