@@ -12,11 +12,11 @@ console.log(solve(groups));
 
 function solve(groups: string[][][]): number {
   return groups.map(g => getIntersect(g)[0])
-    .map(getPriority)
-    .reduce((a, c) => a + c);
+  .map(i => getPriority(i)!)
+  .reduce((a, c) => a + c);
 }
 
-function getPriority(item: string): number {
+function getPriority(item: string): number | void {
   if (/[a-z]/.test(item)) return item.charCodeAt(0) - 96;
-  return item.charCodeAt(0) - 38;
+  if (/[A-Z]/.test(item)) return item.charCodeAt(0) - 38;
 }

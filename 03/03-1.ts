@@ -14,11 +14,11 @@ console.log(solve(rucksacks));
 
 function solve(rucksacks: [string[], string[]][]): number {
   return rucksacks.map(r => getIntersect(r)[0])
-    .map(getPriority)
+    .map(i => getPriority(i)!)
     .reduce((a, c) => a + c);
 }
 
-function getPriority(item: string): number {
+function getPriority(item: string): number | void {
   if (/[a-z]/.test(item)) return item.charCodeAt(0) - 96;
-  return item.charCodeAt(0) - 38;
+  if (/[A-Z]/.test(item)) return item.charCodeAt(0) - 38;
 }
