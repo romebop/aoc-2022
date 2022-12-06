@@ -9,15 +9,15 @@ const messageSize = 14;
 console.log(solve(signal, startMarkerSize, messageSize));
 
 function solve(signal: string, startMarkerSize: number, messageSize: number): number | void {
-  let postStartMarkerIdx: number;
+  let messageIdx: number;
   for (let i = startMarkerSize - 1; i < signal.length; i++) {
     const buffer = signal.slice(i - (startMarkerSize - 1), i + 1);
     if (isDistinctChars(buffer)) {
-      postStartMarkerIdx = i + 1;
+      messageIdx = i + messageSize;
       break;
     };
   }
-  for (let i = postStartMarkerIdx! + messageSize - 1; i < signal.length; i++) {
+  for (let i = messageIdx!; i < signal.length; i++) {
     const buffer = signal.slice(i - (messageSize - 1), i + 1);
     if (isDistinctChars(buffer)) return i + 1;
   }
