@@ -11,7 +11,7 @@ console.log(solve(terminalOutput, totalSpace, requiredSpace));
 type File = { name: string, size: number };
 type Directory = { name: string, contents: (File | Directory)[] };
 
-function solve(terminalOutput: string[], totalSpace: number, requiredSpace: number): number | void {
+function solve(terminalOutput: string[], totalSpace: number, requiredSpace: number): number {
   const root: Directory = getFilesystem(terminalOutput);
   const unusedSpace = totalSpace - getDirSize(root);
   const spaceToDelete = requiredSpace - unusedSpace; 
