@@ -18,14 +18,10 @@ function solve(map: number[][]): number {
 
 function isVisible(map: number[][], coord: Point): boolean {
   const { x, y } = coord;
-  const isShorterThanTarget = isShorter(map[y][x]);
   return (x === 0 || x === map[0].length - 1 || y === 0 || y === map.length - 1)
-    || (
-      getTrees(map, coord, 'up').every(isShorterThanTarget)
-      || getTrees(map, coord, 'down').every(isShorterThanTarget)
-      || getTrees(map, coord, 'left').every(isShorterThanTarget)
-      || getTrees(map, coord, 'right').every(isShorterThanTarget)
-    );
+    || (['up', 'down', 'left', 'right'] as Direction[])
+      .map(dir => getTrees(map, coord, dir).every(t => t < map[y][x]))
+      .reduce((a, c) => a || c);
 }
 
 function getTrees(map: number[][], { x, y }: Point, dir: Direction): number[] {
@@ -57,8 +53,4 @@ function getTrees(map: number[][], { x, y }: Point, dir: Direction): number[] {
     }
   }
   return trees;
-}
-
-function isShorter(target: number): (t: number) => boolean {
-  return t => t < target;
 }

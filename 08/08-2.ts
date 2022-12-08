@@ -17,8 +17,9 @@ function solve(map: number[][]): number {
 }
 
 function getScenicScore(map: number[][], coord: Point): number {
-  return getNumViewTrees(map, coord, 'up') * getNumViewTrees(map, coord, 'down')
-    * getNumViewTrees(map, coord, 'left') * getNumViewTrees(map, coord, 'right');
+  return (['up', 'down', 'left', 'right'] as Direction[])
+    .map(dir => getNumViewTrees(map, coord, dir))
+    .reduce((a, c) => a * c);
 }
 
 function getNumViewTrees(map: number[][], { x, y }: Point, dir: Direction): number {
