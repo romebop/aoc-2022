@@ -21,7 +21,7 @@ function solve(motions: Motion[]): number {
   for (const m of motions) {
     for (let i = 0; i < m.steps; i++) {
       head = moveStep(head, m.dir)!;
-      tail = updateTail(head, tail)!;
+      tail = updateTail(head, tail);
       tailVisitLog.add(serializePoint(tail));
     }
   }
@@ -35,7 +35,7 @@ function moveStep({ x, y }: Point, dir: Direction): Point | void {
   if (dir === 'R') return { x: x + 1, y };
 }
 
-function updateTail(head: Point, tail: Point): Point | void {
+function updateTail(head: Point, tail: Point): Point {
   if (getDistance(head, tail) < 2) return tail;
   const x = head.x > tail.x ? tail.x + 1 : tail.x - 1;
   const y = head.y > tail.y ? tail.y + 1 : tail.y - 1;

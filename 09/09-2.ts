@@ -21,7 +21,7 @@ function solve(motions: Motion[], numKnots: number): number {
     for (let i = 0; i < m.steps; i++) {
       knots[0] = moveStep(knots[0], m.dir)!;
       for (let j = 0; j < knots.length - 1; j++) {
-        knots[j + 1] = updateKnot(knots[j], knots[j + 1])!
+        knots[j + 1] = updateKnot(knots[j], knots[j + 1]);
       }
       tailVisitLog.add(serializePoint(knots.at(-1)!));
     }
@@ -36,7 +36,7 @@ function moveStep({ x, y }: Point, dir: Direction): Point | void {
   if (dir === 'R') return { x: x + 1, y };
 }
 
-function updateKnot(lead: Point, chase: Point): Point | void {
+function updateKnot(lead: Point, chase: Point): Point {
   if (getDistance(lead, chase) < 2) return chase;
   const x = lead.x > chase.x ? chase.x + 1 : chase.x - 1;
   const y = lead.y > chase.y ? chase.y + 1 : chase.y - 1;
