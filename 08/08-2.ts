@@ -1,11 +1,11 @@
 import { readFileSync } from 'fs';
+import { Point } from '../util';
 
 const inputFile = process.argv.slice(2)[0];
 
 const map: number[][] = readFileSync(inputFile, 'utf8').split('\n')
   .map(s => s.split('').map(Number));
 
-type Point = { x: number, y: number };
 type Direction = 'up' | 'down' | 'left' | 'right';
 
 console.log(solve(map));

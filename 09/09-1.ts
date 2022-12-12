@@ -1,10 +1,10 @@
 import { readFileSync } from 'fs';
+import { Point } from '../util';
 
 const inputFile = process.argv.slice(2)[0];
 
 type Direction = 'U' | 'D' | 'L' | 'R';
 type Motion = { dir: Direction, steps: number };
-type Point = { x: number, y: number };
 
 const motions: Motion[] = readFileSync(inputFile, 'utf8').split('\n')
   .map(s => {
