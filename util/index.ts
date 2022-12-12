@@ -13,3 +13,11 @@ export function getIntersect<T>(arrays: T[][]): T[] {
       })
   );
 }
+
+export function getRange(start: number, end: number): number[] {
+  const result: number[] = [];
+  for (let i = start; i < end; i++) {
+    result.push(i);
+  }
+  return result;
+}

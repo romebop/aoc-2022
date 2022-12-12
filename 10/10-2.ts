@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { getRange } from '../util';
 
 const inputFile = process.argv.slice(2)[0];
 
@@ -44,14 +45,6 @@ function solve(instrs: Instruction[]): void {
     crt[cycle - 1] = spriteRange.includes((cycle % crtWidth) - 1) ? '#' : '.';
   }
   printCrt(crt, crtWidth);
-}
-
-function getRange(start: number, end: number): number[] {
-  const result: number[] = [];
-  for (let i = start; i < end; i++) {
-    result.push(i);
-  }
-  return result;
 }
 
 function printCrt(crt: string[], width: number): void {
