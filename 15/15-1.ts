@@ -13,7 +13,7 @@ const pairs: Pair[] = readFileSync(inputFile, 'utf8').split('\n')
       beacon: { x: +bx, y: +by },
     };
   });
-const y = 10;
+const y = 2_000_000;
 
 console.log(solve(pairs, y));
 
