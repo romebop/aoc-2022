@@ -45,3 +45,23 @@ export function deserializePoint(str: string): Point {
 export function isSamePoint(p1: Point, p2: Point): boolean {
   return p1.x === p2.x && p1.y === p2.y;
 }
+
+export function getManhattanDistance(p1: Point, p2: Point): number {
+  return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+}
+
+export type Range = { start: number, end: number };
+
+export function getMergedRanges(ranges: Range[]): Range[] {
+  const sortedRanges = (JSON.parse(JSON.stringify(ranges)) as Range[])
+    .sort((a, b) => a.start - b.start);
+  const mergedRanges: Range[] = [sortedRanges[0]];
+  for (const range of sortedRanges.slice(1)) {
+    if (mergedRanges.at(-1)!.start <= range.start && range.start <= mergedRanges.at(-1)!.end) {
+      mergedRanges.at(-1)!.end = Math.max(mergedRanges.at(-1)!.end, range.end);
+    } else {
+      mergedRanges.push(range);
+    }
+  }
+  return mergedRanges;
+}
