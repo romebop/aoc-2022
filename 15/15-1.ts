@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { getManhattanDistance, getMergedRanges, isSamePoint, Point, Range } from '../util';
+import { getManhattanDistance, getMergedIntervals, Interval, isSamePoint, Point } from '../util';
 
 const inputFile = process.argv.slice(2)[0];
 
@@ -18,17 +18,17 @@ const y = 2_000_000;
 console.log(solve(pairs, y));
 
 function solve(pairs: Pair[], y: number): number {
-  const noContainRanges: Range[] = [];
+  const noContainIntervals: Interval[] = [];
   for (const { sensor, beacon } of pairs) {
-    const noContainRange = getNoContainRange(sensor, beacon, y);
-    if (noContainRange) noContainRanges.push(noContainRange); 
+    const noContainInterval = getNoContainInterval(sensor, beacon, y);
+    if (noContainInterval) noContainIntervals.push(noContainInterval); 
   }
-  return getMergedRanges(noContainRanges)
+  return getMergedIntervals(noContainIntervals)
     .map(({ start, end }) => end - start + 1)
     .reduce((a, c) => a + c);
 }
 
-function getNoContainRange(sensor: Point, beacon: Point, y: number): Range | null {
+function getNoContainInterval(sensor: Point, beacon: Point, y: number): Interval | null {
   const mDist = getManhattanDistance(sensor, beacon);
   if (y < sensor.y - mDist || y > sensor.y + mDist) return null;
   const xOffset = mDist - Math.abs(sensor.y - y);

@@ -23,6 +23,8 @@ export function getRange(start: number, end: number): number[] {
 }
 
 export type Point = { x: number; y: number; };
+export type Range = { min: number; max: number };
+export type Bounds = { x: Range, y: Range };
 
 export function getAdjacentPoints(map: any[][], { x, y }: Point): Point[] {
   const adjacentPoints: Point[] = [];
@@ -34,11 +36,11 @@ export function getAdjacentPoints(map: any[][], { x, y }: Point): Point[] {
 }
 
 export function serializePoint({ x, y }: Point): string {
-  return `(${x},${y})`;
+  return `(${x}, ${y})`;
 }
 
 export function deserializePoint(str: string): Point {
-  const [x, y] = str.slice(1, -1).split(',').map(e => +e);
+  const [x, y] = str.slice(1, -1).split(', ').map(e => +e);
   return { x, y };
 }
 
@@ -50,18 +52,18 @@ export function getManhattanDistance(p1: Point, p2: Point): number {
   return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
 }
 
-export type Range = { start: number, end: number };
+export type Interval = { start: number, end: number };
 
-export function getMergedRanges(ranges: Range[]): Range[] {
-  const sortedRanges = (JSON.parse(JSON.stringify(ranges)) as Range[])
+export function getMergedIntervals(intervals: Interval[]): Interval[] {
+  const sortedIntervals = (JSON.parse(JSON.stringify(intervals)) as Interval[])
     .sort((a, b) => a.start - b.start);
-  const mergedRanges: Range[] = [sortedRanges[0]];
-  for (const range of sortedRanges.slice(1)) {
-    if (mergedRanges.at(-1)!.start <= range.start && range.start <= mergedRanges.at(-1)!.end) {
-      mergedRanges.at(-1)!.end = Math.max(mergedRanges.at(-1)!.end, range.end);
+  const mergedIntervals: Interval[] = [sortedIntervals[0]];
+  for (const interval of sortedIntervals.slice(1)) {
+    if (mergedIntervals.at(-1)!.start <= interval.start && interval.start <= mergedIntervals.at(-1)!.end) {
+      mergedIntervals.at(-1)!.end = Math.max(mergedIntervals.at(-1)!.end, interval.end);
     } else {
-      mergedRanges.push(range);
+      mergedIntervals.push(interval);
     }
   }
-  return mergedRanges;
+  return mergedIntervals;
 }

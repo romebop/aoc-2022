@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { getManhattanDistance, getMergedRanges, isSamePoint, Point, Range } from '../util';
+import { getManhattanDistance, getMergedIntervals, Interval, Point } from '../util';
 
 const inputFile = process.argv.slice(2)[0];
 
@@ -13,20 +13,20 @@ const pairs: Pair[] = readFileSync(inputFile, 'utf8').split('\n')
       beacon: { x: +bx, y: +by },
     };
   });
-const searchRange = { start: 0, end: 4_000_000 };
+const searchInterval = { start: 0, end: 4_000_000 };
 
-console.log(solve(pairs, searchRange));
+console.log(solve(pairs, searchInterval));
 
-function solve(pairs: Pair[], searchRange: Range): number | void {
-  for (let y = searchRange.start; y <= searchRange.end; y++) {
-    const noContainRanges: Range[] = [];
+function solve(pairs: Pair[], searchInterval: Interval): number | void {
+  for (let y = searchInterval.start; y <= searchInterval.end; y++) {
+    const noContainIntervals: Interval[] = [];
     for (const { sensor, beacon } of pairs) {
-      const noContainRange = getNoContainRange(sensor, beacon, y);
-      if (noContainRange) noContainRanges.push(noContainRange); 
+      const noContainInterval = getNoContainInterval(sensor, beacon, y);
+      if (noContainInterval) noContainIntervals.push(noContainInterval); 
     }
     const restrictedRanges = getRestrictedRanges(
-      connectRanges(getMergedRanges(noContainRanges)),
-      searchRange,
+      connectIntervals(getMergedIntervals(noContainIntervals)),
+      searchInterval,
     );
     if (restrictedRanges.length > 1) {
       const distressBeacon = { x: restrictedRanges[0].end + 1, y };
@@ -35,38 +35,38 @@ function solve(pairs: Pair[], searchRange: Range): number | void {
   }
 }
 
-function getNoContainRange(sensor: Point, beacon: Point, y: number): Range | null {
+function getNoContainInterval(sensor: Point, beacon: Point, y: number): Interval | null {
   const mDist = getManhattanDistance(sensor, beacon);
   if (y < sensor.y - mDist || y > sensor.y + mDist) return null;
   const xOffset = mDist - Math.abs(sensor.y - y);
   return { start: sensor.x - xOffset, end: sensor.x + xOffset };
 }
 
-function getRestrictedRanges(ranges: Range[], searchRange: Range): Range[] {
-  const restrictedRanges: Range[] = [];
-  for (const range of ranges) {
-    if (range.end < searchRange.start && range.start > searchRange.end) continue;
-    const start = range.start < searchRange.start ? searchRange.start : range.start;
-    const end = range.end > searchRange.end ? searchRange.end : range.end;
-    restrictedRanges.push({ start, end });
+function getRestrictedRanges(intervals: Interval[], searchInterval: Interval): Interval[] {
+  const restrictedIntervals: Interval[] = [];
+  for (const interval of intervals) {
+    if (interval.end < searchInterval.start && interval.start > searchInterval.end) continue;
+    const start = interval.start < searchInterval.start ? searchInterval.start : interval.start;
+    const end = interval.end > searchInterval.end ? searchInterval.end : interval.end;
+    restrictedIntervals.push({ start, end });
   }
-  return restrictedRanges;
+  return restrictedIntervals;
 }
 
 // Sensors and beacons always exist at integer coordinates.
-function connectRanges(ranges: Range[]): Range[] {
-  const connectedRanges: Range[] = [];
-  let currRange = { ...ranges[0] };
-  for (let i = 1; i < ranges.length; i++) {
-    if (currRange.end === ranges[i].start - 1) {
-      currRange.end = ranges[i].end;
+function connectIntervals(intervals: Interval[]): Interval[] {
+  const connectedIntervals: Interval[] = [];
+  let currInterval = { ...intervals[0] };
+  for (let i = 1; i < intervals.length; i++) {
+    if (currInterval.end === intervals[i].start - 1) {
+      currInterval.end = intervals[i].end;
     } else {
-      connectedRanges.push(currRange);
-      currRange = { ...ranges[i] };
+      connectedIntervals.push(currInterval);
+      currInterval = { ...intervals[i] };
     }
   }
-  connectedRanges.push(currRange);
-  return connectedRanges;
+  connectedIntervals.push(currInterval);
+  return connectedIntervals;
 }
 
 function getTuningFrequency(p: Point): number {
